@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Your content here -->
+    <div class="container">
+        <h2>{{ obj.obj }}</h2>
+        <p>{{ obj.descr }}</p>
+        <p>Адрес: {{ obj.addr }}</p>
+        <p>Стоимость: {{ obj.price }}</p>
+        <p>Площадь: {{ obj.m2 }}</p>
+        <p>Этаж: {{ obj.floor }}</p>
+        <p>Этажей: {{ obj.floors }}</p>
+        <p>Телефон: {{ obj.tel }}</p>
+        <p>Published: {{ obj.date}}</p>
+        <script type="text/javascript">
+            let imglist = '{{ obj.linkimg }}'
+            let imgarray = imglist.split('|')
+            console.log(imgarray)
+            Fancybox.bind("[data-fancybox]", {
+                Thumbs : {
+          type: "modern"
+        }
+            // Your custom options
+            });
+        </script>
+    <div id="gallery">
+        {% for item in obj.linkimg %}
+        <a href="{{item}}" data-fancybox="gallery">
+         <img src="{{item}}" width="200" height="150" alt="A sample image"/>
+         </a>
+        {% endfor %}
+        
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>-->
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+
+    <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
+    <link rel="stylesheet" href="{%  static 'pico.min.css' %}">
+    <style>
+        /* Body and Container Styles */
+        body {
+
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        #articles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            grid-column: 1 / -1;  /* Span all columns */
+            margin-bottom: 20px;
+            text-align: center;
+            text-decoration: underline;
+        }
+
+        /* Article Styles */
+        .article {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .article h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+        }
+        .article img {
+            max-width: 300px;
+            height: 300px;
+            border-radius: 8px;
+        }
+        .article p {
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+<div id="searchform">
+    <form id="search">
+    <div class="grid">
+    <div id="left">
+
+     <fieldset>
+         <legend>Район:</legend>
+         <label>
+         <input type="checkbox" name="aviastr" />
+         Авиастроительный
+        </label>
+        <label>
+         <input type="checkbox" name="vachit"/>
+         Вахитовский
+        </label>
+        <label>
+         <input type="checkbox" name="kirov" />
+         Кировский
+        </label>
+        <label>
+         <input type="checkbox" name="moscow" />
+         Московский
+        </label>
+        <label>
+         <input type="checkbox" name="novosav" />
+         Ново-Савиновский
+        </label>
+        <label>
+         <input type="checkbox" name="privol" />
+         Приволжский
+        </label>
+        <label>
+         <input type="checkbox" name="sovet" />
+         Советский
+        </label>
+     </fieldset>
+     </div> <!-- left -->
+     <div id="right">
+    <fieldset>
+     <label>Адрес:
+      <input type="text" name="addr" placeholder="Улица"/>
+      </label>
+      <label> Цена от:
+      <input type="range" name="price" min="0" max="10000000" value="0" id="price"  
+      oninput="this.nextElementSibling.value = this.value"
+      />
+      <output>0</output>
+      </label>
+      
+      <input type="submit" value="Send" />
+     </fieldset>
+
+    </div> <!-- Right -->
+     
+    </div>  <!-- Grid -->
+    </form>
+</div>
+<h1>Объекты</h1>
+<div id="articles">
+    {% for article in page_obj %}
+    <div class="article">
+        <h2>{{ article.obj }}</h2>
+        <a class="image-container" href="{{ article.linkimg }}">
+            <img width="300" height="300" src="{{ article.linkimg }}" alt="A sample image"/>
+        </a>
+        <p>{{ article.descr| truncatewords:30}}</p>
+
+        {% if page_obj.has_next and forloop.last %}
+        <span hx-get="{% url 'articles' %}?page={{ page_obj.next_page_number }}"
+              hx-swap="beforeend" hx-target="#articles" hx-select=".article"
+              hx-trigger="revealed">
+            </span>
+        {% endif %}
+
+    </div>
+    {% endfor %}
+
+</div>
+
+
+</body>
+</html>

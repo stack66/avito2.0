@@ -1,0 +1,135 @@
+<!-- base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Avito 2.0</title>
+   <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <script src="{% static 'fancybox.umd.js' %}"></script>
+    <script type="text/javascript">
+        function setText(e){
+            document.getElementById('find').value = e.innerHTML;
+        }
+    </script>
+    
+    <link rel="stylesheet" href="{% static 'fancybox.css' %}" />
+    <link rel="shortcut icon" href="{%  static 'favicon.ico' %}">
+    <link rel="stylesheet" href="{%  static 'pico.min.css' %}">
+    <style>
+        /* Body and Container Styles */
+        body {
+
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        #articles {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            grid-column: 1 / -1;  /* Span all columns */
+            margin-bottom: 20px;
+            text-align: center;
+            text-decoration: underline;
+        }
+
+        /* Article Styles */
+        .article {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .article h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+        }
+        .article img {
+            max-width: 300px;
+            height: 300px;
+            border-radius: 8px;
+        }
+        .article p {
+            text-align: justify;
+        }
+    /* Scroll button styles */
+        #scroll-btn {       
+            opacity: 0;   
+            width: 40px;
+            height: 40px;
+            color: #fff;
+            background-color: #2b9d03;
+            position: fixed;
+            bottom: 10%;
+            right: 10%;    
+            border: 2px solid #fff;
+            border-radius: 50%; 
+            font: bold 20px monospace;       
+            transition: opacity 0.5s, transform 0.5s;
+            /* Align */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #scroll-btn.show {      
+            opacity: 1;  
+            transition: opacity 1s, transform 1s;     
+        }
+    </style>
+</head>
+<body>
+    <!-- Your common template structure here -->
+    <nav
+      aria-label="breadcrumb"
+      style="--pico-nav-breadcrumb-divider: '✨';"
+    >
+      <ul>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="#">Flats</a></li>
+        <li><a href="#">Design</a></li>
+  </ul>
+</nav>
+    {% block content %}{% endblock %}
+
+</body>
+<!-- Scroll to top button -->
+    <script type="text/javascript" defer>
+        const scrollTop = function () {
+      // create HTML button element
+        const scrollBtn = document.createElement("button");
+        scrollBtn.innerHTML = "&uarr;";
+        scrollBtn.setAttribute("id", "scroll-btn");
+        //scrollBtn.setAttribute("data-tooltip", "В начало");
+        document.body.appendChild(scrollBtn);
+      // hide/show button based on scroll distance
+        const scrollBtnDisplay = function () {
+        window.scrollY > window.innerHeight ? scrollBtn.classList.add("show")
+          : scrollBtn.classList.remove("show");
+      };
+      window.addEventListener("scroll", scrollBtnDisplay);
+      // scroll to top when button clicked
+        const scrollWindow = function () {
+        if (window.scrollY != 0) {
+          setTimeout(function () {
+            window.scrollTo(0, window.scrollY - 50);
+            scrollWindow();
+          }, 10);
+        }
+      };
+      scrollBtn.addEventListener("click", scrollWindow);
+    };
+    scrollTop();
+    </script>
+</html>

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div id="searchform">
+    <form id="search" action="{% url 'search' %} " method="GET">
+     
+    <div class="grid">
+    <div id="left">
+
+     <fieldset>
+         <legend>Район:</legend>
+         <label>
+         <input type="checkbox" name="aviastr" />
+         Авиастроительный
+        </label>
+        <label>
+         <input type="checkbox" name="vachit"/>
+         Вахитовский
+        </label>
+        <label>
+         <input type="checkbox" name="kirov" />
+         Кировский
+        </label>
+        <label>
+         <input type="checkbox" name="moscow" />
+         Московский
+        </label>
+        <label>
+         <input type="checkbox" name="novosav" />
+         Ново-Савиновский
+        </label>
+        <label>
+         <input type="checkbox" name="privol" />
+         Приволжский
+        </label>
+        <label>
+         <input type="checkbox" name="sovet" />
+         Советский
+        </label>
+     </fieldset>
+     </div> <!-- left -->
+     <div id="right">
+    <fieldset>
+     <label>Адрес:
+      <input type="text" name="addr" placeholder="Улица"/>
+      </label>
+      <label> Цена от:
+      <input type="range" name="price" min="0" max="10000000" value="0" id="price"  
+      oninput="this.nextElementSibling.value = this.value"
+      />
+      <output>0</output>
+      </label>
+      
+      <input type="submit" value="Send" />
+     </fieldset>
+
+    </div> <!-- Right -->
+     
+    </div>  <!-- Grid -->
+    </form>
+</div>
+<h3>&nbsp;Объекты {{ count }}</h3>
+<div id="articles">
+
+    {% for article in page_obj %}
+    <div class="article">
+        <h2>{{ article.obj }}</h2>
+        <a class="image-container" href="http://localhost:8000/{{ article.id }}", target="blank">
+            <img width="300" height="300" src="{{ article.linkimg }}" alt="A sample image"/>
+        </a>
+        <p>{{ article.descr| truncatewords:30}}</p>
+
+        {% if page_obj.has_next and forloop.last %}
+        <span hx-get="{% url 'articles' %}?page={{ page_obj.next_page_number }}"
+              hx-swap="beforeend" hx-target="#articles" hx-select=".article"
+              hx-trigger="revealed">
+            </span>
+        {% endif %}
+
+    </div>
+    {% endfor %}
+
+</div>
+
+
+
+{% endblock %}

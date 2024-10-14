@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div id="searchform">
+    <form id="search" action="{% url 'search' %} " method="GET">
+    
+    <div class="grid">
+    <div id="left">
+
+     <fieldset>
+         <legend>Район:</legend>
+         <label>
+         <input type="checkbox" name="Ави" />
+         Авиастроительный
+        </label>
+        <label>
+         <input type="checkbox" name="Вах"/>
+         Вахитовский
+        </label>
+        <label>
+         <input type="checkbox" name="Кир" />
+         Кировский
+        </label>
+        <label>
+         <input type="checkbox" name="Мос" />
+         Московский
+        </label>
+        <label>
+         <input type="checkbox" name="Нов" />
+         Ново-Савиновский
+        </label>
+        <label>
+         <input type="checkbox" name="При" />
+         Приволжский
+        </label>
+        <label>
+         <input type="checkbox" name="Сов" />
+         Советский
+        </label>
+    <select name="otype" aria-label="otype" required>
+      <option selected disabled value="">
+        Выберите тип объекта...
+      </option>
+      <option>комната</option>
+      <option>Студия</option>
+      <option>квартира</option>
+      <option>Дом</option>
+      <option>Дача</option>
+      <option>Коттедж</option>
+      <option>Таунхаус</option>
+    </select>
+     </fieldset>
+     </div> <!-- left -->
+     <div id="right">
+    <fieldset>
+     <label>Адрес:
+      <input id="find" type="search" name="addr" placeholder="Начните вводить название улицы ..."
+      hx-get="/find/"
+      hx-trigger="input changed delay:500ms, find"
+      hx-target="#results"
+      />
+      <a href="#" id="results" onclick="setText(this);"></a>
+      </label>
+      <label> Цена от:
+      <input type="range" name="price" min="0" max="10000000" value="0" id="price"  
+      oninput="this.nextElementSibling.value = this.value"
+      />
+      <output>0</output>
+      </label>
+      
+      <input type="submit" value="Send" />
+     </fieldset>
+
+    </div> <!-- Right -->
+     
+    </div>  <!-- Grid -->
+    </form>
+</div>
+<h3>Объекты {{ count }}</h3>
+<div id="articles" class="grid">
+
+    {% for article in page_obj %}
+    <div class="article">
+        <h3>{{ article.obj }}</h3>
+        {% if flat %}    
+        <a class="image-container" href="{% url 'flat' article.id %}", target="blank">
+            <img width="300" height="300" src="{{ article.linkimg }}" alt="A sample image"/>
+        </a>
+        {% endif %}
+        {% if house %}    
+        <a class="image-container" href="{% url 'house' article.id %}", target="blank">
+            <img width="300" height="300" src="{{ article.linkimg }}" alt="A sample image"/>
+        </a>
+        {% endif %}
+        <p>{{ article.addr }}</p>
+        <p>{{ article.descr| truncatewords:30}}</p>
+
+        {% if page_obj.has_next and forloop.last %}
+        <span hx-get="{% url 'search' %}?{{ q }}&page={{ page_obj.next_page_number }}"
+              hx-swap="beforeend" hx-target="#articles" hx-select=".article"
+              hx-trigger="revealed">
+            </span>
+        {% endif %}
+
+    </div>
+    {% endfor %}
+
+</div>
+
+
+
+{% endblock %}
